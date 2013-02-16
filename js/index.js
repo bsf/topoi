@@ -1,4 +1,4 @@
-angular.module("Application", ["Application.Controllers"])
+angular.module("Application", ["Application.Constants", "Application.Controllers", "Application.Directives", "Application.Filters", "Application.Resources", "Application.Services", "ngResource", "ui.bootstrap"])
 
     .config(["$locationProvider", "$routeProvider", function($locationProvider, $routeProvider) {
         $routeProvider
@@ -9,6 +9,8 @@ angular.module("Application", ["Application.Controllers"])
             .when("/signup", {controller: "SignUpController", templateUrl: "html/signup.html"})
             .otherwise({redirectTo: "/home"});
     }]);
+
+angular.module("Application.Constants", []);
 
 angular.module("Application.Controllers", [])
 
@@ -41,3 +43,11 @@ angular.module("Application.Controllers", [])
             console.log("SignUpController signUp");
         }
     }]);
+
+angular.module("Application.Directives", []);
+
+angular.module("Application.Filters", []);
+
+angular.module("Application.Resources", []);
+
+angular.module("Application.Services", []);
