@@ -24,6 +24,15 @@ angular.module("Application.Constants", [])
 
 angular.module("Application.Controllers", [])
 
+    .controller("AlertsController", ["$scope", "AlertsService", function($scope, AlertsService) {
+        $scope.deleteAlert = function(index) {
+            AlertsService.deleteAlert(index);
+        }
+        $scope.getAlerts = function() {
+            return AlertsService.getAlerts();
+        }
+    }])
+
     .controller("HomeController", ["$scope", function($scope) {
     }])
 
@@ -82,6 +91,66 @@ angular.module("Application.Services", [])
 
     .run(["AuthorizationHeaderService", function(AuthorizationHeaderService) {
         AuthorizationHeaderService.initialise();
+    }])
+
+    .factory("AlertsService", ["$rootScope", function($rootScope) {
+        var AlertClass = Object.freeze({Error: "error", Info: "info", Success: "success", Warn: ""});
+        var _alerts = [];
+        var insertAlert = function(alertClass, alertMessage) {
+            _alerts.push({alertClass: alertClass, alertMessage: alertMessage});
+        }
+        var insertErrorAlert = function(alertMessage) {
+            _alerts.push({alertClass: AlertClass.Error, alertMessage: alertMessage});
+        }
+        var insertInfoAlert = function(alertMessage) {
+            _alerts.push({alertClass: AlertClass.Info, alertMessage: alertMessage});
+        }
+        var insertSuccessAlert = function(alertMessage) {
+            _alerts.push({alertClass: AlertClass.Success, alertMessage: alertMessage});
+        }
+        var insertWarnAlert = function(alertMessage) {
+            _alerts.push({alertClass: AlertClass.Warn, alertMessage: alertMessage});
+        }
+        $rootScope.$on("ResetPasswordService.resetPasswordError", function(event, data) {
+            console.log("AlertsService ResetPasswordService.resetPasswordError");
+            insertErrorAlert(data.alertMessage);
+        });
+        $rootScope.$on("ResetPasswordService.resetPasswordSuccess", function(event, data) {
+            console.log("AlertsService ResetPasswordService.resetPasswordSuccess");
+            insertSuccessAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.logInError", function(event, data) {
+            console.log("AlertsService UserService.logInError");
+            insertErrorAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.logInSuccess", function(event, data) {
+            console.log("AlertsService UserService.logInSuccess");
+            insertSuccessAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.logOutError", function(event, data) {
+            console.log("AlertsService UserService.logOutError");
+            insertErrorAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.logOutSuccess", function(event, data) {
+            console.log("AlertsService UserService.logOutSuccess");
+            insertSuccessAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.signUpError", function(event, data) {
+            console.log("AlertsService UserService.signUpError");
+            insertErrorAlert(data.alertMessage);
+        });
+        $rootScope.$on("UserService.signUpSuccess", function(event, data) {
+            console.log("AlertsService UserService.signUpSuccess");
+            insertSuccessAlert(data.alertMessage);
+        });
+        return {
+            deleteAlert: function(index) {
+                _alerts.splice(index, 1);
+            },
+            getAlerts: function() {
+                return _alerts;
+            }
+        }
     }])
 
     .factory("AuthorizationHeaderService", ["$http", "$rootScope", "AuthorizationService", "KinveyAppSecret", function($http, $rootScope, AuthorizationService, KinveyAppSecret) {
