@@ -42,7 +42,10 @@ angular.module("Application.Controllers", [])
         }
     }])
 
-    .controller("HomeController", ["$scope", function($scope) {
+    .controller("HomeController", ["$scope", "AuthorizationService", function($scope, AuthorizationService) {
+        $scope.hasAuthorization = function() {
+            return AuthorizationService.hasAuthorization()
+        }
     }])
 
     .controller("LogInController", ["$scope", "UserService", function($scope, UserService) {
@@ -57,7 +60,10 @@ angular.module("Application.Controllers", [])
         }
     }])
 
-    .controller("NavController", ["$scope", function($scope) {
+    .controller("NavController", ["$scope", "AuthorizationService", function($scope, AuthorizationService) {
+        $scope.hasAuthorization = function() {
+            return AuthorizationService.hasAuthorization()
+        }
     }])
 
     .controller("ResetPasswordController", ["$scope", "ResetPasswordService", function($scope, ResetPasswordService) {
