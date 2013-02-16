@@ -21,6 +21,18 @@ angular.module("Application", ["Application.Constants", "Application.Controllers
                 $location.path("/home")
             }
         })
+        $rootScope.$on("ResetPasswordService.resetPasswordSuccess", function() {
+            $location.path("/home")
+        })
+        $rootScope.$on("UserService.logInSuccess", function() {
+            $location.path("/home")
+        })
+        $rootScope.$on("UserService.logOutSuccess", function() {
+            $location.path("/home")
+        })
+        $rootScope.$on("UserService.signUpSuccess", function() {
+            $location.path("/home")
+        })
     }])
 
 angular.module("Application.Constants", [])
