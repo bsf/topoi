@@ -184,7 +184,7 @@ angular.module("Application.Services", [])
                 return _authorization
             },
             hasAuthorization: function() {
-                return _authorization !== Authorization.NoAuthorizatio
+                return _authorization !== Authorization.NoAuthorization
             }
         }
     }])
