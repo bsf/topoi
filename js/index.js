@@ -84,7 +84,7 @@ angular.module("Application.Services", [])
         AuthorizationHeaderService.initialise();
     }])
 
-    .factory("AuthorizationHeaderService", ["$http", "KinveyAppSecret", function($http, KinveyAppSecret) {
+    .factory("AuthorizationHeaderService", ["$http", "AuthorizationService", "KinveyAppSecret", function($http, AuthorizationService, KinveyAppSecret) {
         var setAuthorizationHeader = function(authorizationHeader) {
             $http.defaults.headers.common.Authorization = authorizationHeader;
         }
@@ -94,6 +94,31 @@ angular.module("Application.Services", [])
         return {
             initialise: function() {
                 setBasicAuthorizationHeader();
+            }
+        }
+    }])
+
+    .factory("AuthorizationService", ["$rootScope", function($rootScope) {
+        var Authorization = Object.freeze({NoAuthorization: {}});
+        var _authorization = Authorization.NoAuthorization;
+        $rootScope.$on("UserService.logInSuccess", function(event, data) {
+            console.log("AuthorizationService UserService.logInSuccess");
+            _authorization = data.authorization;
+        });
+        $rootScope.$on("UserService.logOutSuccess", function(event, data) {
+            console.log("AuthorizationService UserService.logOutSuccess");
+            _authorization = Authorization.NoAuthorization;
+        });
+        $rootScope.$on("UserService.signUpSuccess", function(event, data) {
+            console.log("AuthorizationService UserService.signUpSuccess");
+            _authorization = data.authorization;
+        });
+        return {
+            getAuthorization: function() {
+                return _authorization;
+            },
+            hasAuthorization: function() {
+                return _authorization !== Authorization.NoAuthorization;
             }
         }
     }])
