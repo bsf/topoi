@@ -14,7 +14,13 @@ angular.module("Application", ["Application.Constants", "Application.Controllers
             .otherwise({redirectTo: "/home"});
     }]);
 
-angular.module("Application.Constants", []);
+angular.module("Application.Constants", [])
+
+    .constant("KinveyAppKey", "kid_ePnnV73luf")
+
+    .constant("KinveyAppSecret", "a2lkX2VQbm5WNzNsdWY6MGY3YTFmNDliZDQzNDA3N2JhYzE4YjU2NDA2MTMzYWE=")
+
+    .constant("KinveyBaseUrl", "https://baas.kinvey.com");
 
 angular.module("Application.Controllers", [])
 
