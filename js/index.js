@@ -84,13 +84,28 @@ angular.module("Application.Services", [])
         AuthorizationHeaderService.initialise();
     }])
 
-    .factory("AuthorizationHeaderService", ["$http", "AuthorizationService", "KinveyAppSecret", function($http, AuthorizationService, KinveyAppSecret) {
+    .factory("AuthorizationHeaderService", ["$http", "$rootScope", "AuthorizationService", "KinveyAppSecret", function($http, $rootScope, AuthorizationService, KinveyAppSecret) {
         var setAuthorizationHeader = function(authorizationHeader) {
             $http.defaults.headers.common.Authorization = authorizationHeader;
         }
         var setBasicAuthorizationHeader = function() {
             setAuthorizationHeader("Basic " + KinveyAppSecret);
         }
+        var setKinveyAuthorizationHeader = function() {
+            setAuthorizationHeader("Kinvey " + AuthorizationService.getAuthorization());
+        }
+        $rootScope.$on("UserService.logInSuccess", function(event, data) {
+            console.log("AuthorizationHeaderService UserService.logInSuccess");
+            setKinveyAuthorizationHeader();
+        });
+        $rootScope.$on("UserService.logOutSuccess", function(event, data) {
+            console.log("AuthorizationHeaderService UserService.logOutSuccess");
+            setBasicAuthorizationHeader();
+        });
+        $rootScope.$on("UserService.signUpSuccess", function(event, data) {
+            console.log("AuthorizationHeaderService UserService.signUpSuccess");
+            setKinveyAuthorizationHeader();
+        });
         return {
             initialise: function() {
                 setBasicAuthorizationHeader();
