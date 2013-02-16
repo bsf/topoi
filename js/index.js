@@ -16,16 +16,28 @@ angular.module("Application.Controllers", [])
     }])
 
     .controller("LogInController", ["$scope", function($scope) {
+        $scope.logIn = function() {
+            console.log("LogInController login");
+        }
     }])
 
     .controller("LogOutController", ["$scope", function($scope) {
+        $scope.logOut = function() {
+            console.log("LogOutController logOut");
+        }
     }])
 
     .controller("NavController", ["$scope", function($scope) {
     }])
 
     .controller("ResetPasswordController", ["$scope", function($scope) {
+        $scope.resetPassword = function() {
+            console.log("ResetPasswordController resetPassword");
+        }
     }])
 
     .controller("SignUpController", ["$scope", function($scope) {
+        $scope.signUp = function() {
+            console.log("SignUpController signUp");
+        }
     }]);
