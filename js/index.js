@@ -62,7 +62,21 @@ angular.module("Application.Directives", []);
 
 angular.module("Application.Filters", []);
 
-angular.module("Application.Resources", []);
+angular.module("Application.Resources", [])
+
+    .factory("ResetPasswordResource", ["$resource", "KinveyAppKey", "KinveyBaseUrl", function($resource, KinveyAppKey, KinveyBaseUrl) {
+        return $resource(KinveyBaseUrl + "/rpc/" + KinveyAppKey + "/:username/user-password-reset-initiate", {}, {
+            resetPassword: {method: "POST", params: {username: "@username"}}
+        });
+    }])
+
+    .factory("UserResource", ["$resource", "KinveyAppKey", "KinveyBaseUrl", function($resource, KinveyAppKey, KinveyBaseUrl) {
+        return $resource(KinveyBaseUrl + "/user/" + KinveyAppKey + "/:verb", {}, {
+            logIn: {method: "POST", params: {verb: "login"}},
+            logOut: {method: "POST", params: {verb: "_logout"}},
+            signUp: {method: "POST", params: {verb: ""}}
+        });
+    }]);
 
 angular.module("Application.Services", [])
 
