@@ -38,14 +38,12 @@ angular.module("Application.Controllers", [])
 
     .controller("LogInController", ["$scope", "UserService", function($scope, UserService) {
         $scope.logIn = function() {
-            console.log("LogInController login");
             UserService.logIn($scope.password, $scope.username);
         }
     }])
 
     .controller("LogOutController", ["$scope", "UserService", function($scope, UserService) {
         $scope.logOut = function() {
-            console.log("LogOutController logOut");
             UserService.logOut();
         }
     }])
@@ -55,14 +53,12 @@ angular.module("Application.Controllers", [])
 
     .controller("ResetPasswordController", ["$scope", "ResetPasswordService", function($scope, ResetPasswordService) {
         $scope.resetPassword = function() {
-            console.log("ResetPasswordController resetPassword");
             ResetPasswordService.resetPassword($scope.username);
         }
     }])
 
     .controller("SignUpController", ["$scope", "UserService", function($scope, UserService) {
         $scope.signUp = function() {
-            console.log("SignUpController signUp");
             UserService.signUp($scope.email, $scope.password, $scope.username);
         }
     }]);
@@ -112,35 +108,27 @@ angular.module("Application.Services", [])
             _alerts.push({alertClass: AlertClass.Warn, alertMessage: alertMessage});
         }
         $rootScope.$on("ResetPasswordService.resetPasswordError", function(event, data) {
-            console.log("AlertsService ResetPasswordService.resetPasswordError");
             insertErrorAlert(data.alertMessage);
         });
         $rootScope.$on("ResetPasswordService.resetPasswordSuccess", function(event, data) {
-            console.log("AlertsService ResetPasswordService.resetPasswordSuccess");
             insertSuccessAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.logInError", function(event, data) {
-            console.log("AlertsService UserService.logInError");
             insertErrorAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.logInSuccess", function(event, data) {
-            console.log("AlertsService UserService.logInSuccess");
             insertSuccessAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.logOutError", function(event, data) {
-            console.log("AlertsService UserService.logOutError");
             insertErrorAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.logOutSuccess", function(event, data) {
-            console.log("AlertsService UserService.logOutSuccess");
             insertSuccessAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.signUpError", function(event, data) {
-            console.log("AlertsService UserService.signUpError");
             insertErrorAlert(data.alertMessage);
         });
         $rootScope.$on("UserService.signUpSuccess", function(event, data) {
-            console.log("AlertsService UserService.signUpSuccess");
             insertSuccessAlert(data.alertMessage);
         });
         return {
@@ -164,15 +152,12 @@ angular.module("Application.Services", [])
             setAuthorizationHeader("Kinvey " + AuthorizationService.getAuthorization());
         }
         $rootScope.$on("UserService.logInSuccess", function(event, data) {
-            console.log("AuthorizationHeaderService UserService.logInSuccess");
             setKinveyAuthorizationHeader();
         });
         $rootScope.$on("UserService.logOutSuccess", function(event, data) {
-            console.log("AuthorizationHeaderService UserService.logOutSuccess");
             setBasicAuthorizationHeader();
         });
         $rootScope.$on("UserService.signUpSuccess", function(event, data) {
-            console.log("AuthorizationHeaderService UserService.signUpSuccess");
             setKinveyAuthorizationHeader();
         });
         return {
@@ -186,15 +171,12 @@ angular.module("Application.Services", [])
         var Authorization = Object.freeze({NoAuthorization: {}});
         var _authorization = Authorization.NoAuthorization;
         $rootScope.$on("UserService.logInSuccess", function(event, data) {
-            console.log("AuthorizationService UserService.logInSuccess");
             _authorization = data.authorization;
         });
         $rootScope.$on("UserService.logOutSuccess", function(event, data) {
-            console.log("AuthorizationService UserService.logOutSuccess");
             _authorization = Authorization.NoAuthorization;
         });
         $rootScope.$on("UserService.signUpSuccess", function(event, data) {
-            console.log("AuthorizationService UserService.signUpSuccess");
             _authorization = data.authorization;
         });
         return {
@@ -210,12 +192,9 @@ angular.module("Application.Services", [])
     .factory("ResetPasswordService", ["$rootScope", "ResetPasswordResource", function($rootScope, ResetPasswordResource) {
         return {
             resetPassword: function(username) {
-                console.log("ResetPasswordService resetPassword");
                 var resetPasswordResource = ResetPasswordResource.resetPassword({}, {username: username}, function() {
-                    console.log("ResetPasswordService resetPassword success");
                     $rootScope.$emit("ResetPasswordService.resetPasswordSuccess", {alertMessage: "An email has been sent to " + username + "!"});
                 }, function(data) {
-                    console.log("ResetPasswordService resetPassword error");
                     $rootScope.$emit("ResetPasswordService.resetPasswordError", {alertMessage: data.data.description});
                 });
             }
@@ -225,32 +204,23 @@ angular.module("Application.Services", [])
     .factory("UserService", ["$rootScope", "UserResource", function($rootScope, UserResource) {
         return {
             logIn: function(password, username) {
-                console.log("UserService logIn");
                 var userResource = UserResource.logIn({}, {password: password, username: username}, function() {
-                    console.log("UserService logIn success");
                     $rootScope.$emit("UserService.logInSuccess", {alertMessage: "Welcome back to Topoi!", authorization: userResource._kmd.authtoken});
                 }, function(data) {
-                    console.log("UserService logIn error");
                     $rootScope.$emit("UserService.logInError", {alertMessage: (data.status === 401) ? "Please choose a different username and/or password" : data.data.description});
                 });
             },
             logOut: function() {
-                console.log("UserService logOut");
                 var userResource = UserResource.logOut({}, {}, function() {
-                    console.log("UserService logOut success");
                     $rootScope.$emit("UserService.logOutSuccess", {alertMessage: "Thanks for visiting Topoi!"});
                 }, function(data) {
-                    console.log("UserService logOut error");
                     $rootScope.$emit("UserService.logOutError", {alertMessage: data.data.description});
                 });
             },
             signUp: function(email, password, username) {
-                console.log("UserService signUp");
                 var userResource = UserResource.signUp({}, {email: email, password: password, username: username}, function() {
-                    console.log("UserService signUp success");
                     $rootScope.$emit("UserService.signUpSuccess", {alertMessage: "Welcome to Topoi!", authorization: userResource._kmd.authtoken});
                 }, function(data) {
-                    console.log("UserService signUp error");
                     $rootScope.$emit("UserService.signUpError", {alertMessage: (data.status === 409) ? "Please choose a different username" : data.data.description});
                 });
             }
