@@ -30,7 +30,7 @@ angular.module("Application.Controllers", [])
     .controller("LogInController", ["$scope", "UserService", function($scope, UserService) {
         $scope.logIn = function() {
             console.log("LogInController login");
-            UserService.logIn();
+            UserService.logIn($scope.password, $scope.username);
         }
     }])
 
@@ -47,14 +47,14 @@ angular.module("Application.Controllers", [])
     .controller("ResetPasswordController", ["$scope", "ResetPasswordService", function($scope, ResetPasswordService) {
         $scope.resetPassword = function() {
             console.log("ResetPasswordController resetPassword");
-            ResetPasswordService.resetPassword();
+            ResetPasswordService.resetPassword($scope.username);
         }
     }])
 
     .controller("SignUpController", ["$scope", "UserService", function($scope, UserService) {
         $scope.signUp = function() {
             console.log("SignUpController signUp");
-            UserService.signUp();
+            UserService.signUp($scope.email, $scope.password, $scope.username);
         }
     }]);
 
@@ -80,24 +80,62 @@ angular.module("Application.Resources", [])
 
 angular.module("Application.Services", [])
 
-    .factory("ResetPasswordService", ["$rootScope", function($rootScope) {
+    .run(["AuthorizationHeaderService", function(AuthorizationHeaderService) {
+        AuthorizationHeaderService.initialise();
+    }])
+
+    .factory("AuthorizationHeaderService", ["$http", "KinveyAppSecret", function($http, KinveyAppSecret) {
+        var setAuthorizationHeader = function(authorizationHeader) {
+            $http.defaults.headers.common.Authorization = authorizationHeader;
+        }
+        var setBasicAuthorizationHeader = function() {
+            setAuthorizationHeader("Basic " + KinveyAppSecret);
+        }
         return {
-            resetPassword: function() {
-                console.log("ResetPasswordService resetPassword");
+            initialise: function() {
+                setBasicAuthorizationHeader();
             }
         }
     }])
 
-    .factory("UserService", ["$rootScope", function($rootScope) {
+    .factory("ResetPasswordService", ["$rootScope", "ResetPasswordResource", function($rootScope, ResetPasswordResource) {
         return {
-            logIn: function() {
+            resetPassword: function(username) {
+                console.log("ResetPasswordService resetPassword");
+                var resetPasswordResource = ResetPasswordResource.resetPassword({}, {username: username}, function() {
+                    console.log("ResetPasswordService resetPassword success");
+                }, function() {
+                    console.log("ResetPasswordService resetPassword error");
+                });
+            }
+        }
+    }])
+
+    .factory("UserService", ["$rootScope", "UserResource", function($rootScope, UserResource) {
+        return {
+            logIn: function(password, username) {
                 console.log("UserService logIn");
+                var userResource = UserResource.logIn({}, {password: password, username: username}, function() {
+                    console.log("UserService logIn success");
+                }, function() {
+                    console.log("UserService logIn error");
+                });
             },
             logOut: function() {
                 console.log("UserService logOut");
+                var userResource = UserResource.logOut({}, {}, function() {
+                    console.log("UserService logOut success");
+                }, function() {
+                    console.log("UserService logOut error");
+                });
             },
-            signUp: function() {
+            signUp: function(email, password, username) {
                 console.log("UserService signUp");
+                var userResource = UserResource.signUp({}, {email: email, password: password, username: username}, function() {
+                    console.log("UserService signUp success");
+                }, function() {
+                    console.log("UserService signUp error");
+                });
             }
         }
     }]);
