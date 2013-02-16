@@ -104,8 +104,10 @@ angular.module("Application.Services", [])
                 console.log("ResetPasswordService resetPassword");
                 var resetPasswordResource = ResetPasswordResource.resetPassword({}, {username: username}, function() {
                     console.log("ResetPasswordService resetPassword success");
-                }, function() {
+                    $rootScope.$emit("ResetPasswordService.resetPasswordSuccess", {alertMessage: "An email has been sent to " + username + "!"});
+                }, function(data) {
                     console.log("ResetPasswordService resetPassword error");
+                    $rootScope.$emit("ResetPasswordService.resetPasswordError", {alertMessage: data.data.description});
                 });
             }
         }
@@ -117,24 +119,30 @@ angular.module("Application.Services", [])
                 console.log("UserService logIn");
                 var userResource = UserResource.logIn({}, {password: password, username: username}, function() {
                     console.log("UserService logIn success");
-                }, function() {
+                    $rootScope.$emit("UserService.logInSuccess", {alertMessage: "Welcome back to Topoi!", authorization: userResource._kmd.authtoken});
+                }, function(data) {
                     console.log("UserService logIn error");
+                    $rootScope.$emit("UserService.logInError", {alertMessage: (data.status === 401) ? "Please choose a different username and/or password" : data.data.description});
                 });
             },
             logOut: function() {
                 console.log("UserService logOut");
                 var userResource = UserResource.logOut({}, {}, function() {
                     console.log("UserService logOut success");
-                }, function() {
+                    $rootScope.$emit("UserService.logOutSuccess", {alertMessage: "Thanks for visiting Topoi!"});
+                }, function(data) {
                     console.log("UserService logOut error");
+                    $rootScope.$emit("UserService.logOutError", {alertMessage: data.data.description});
                 });
             },
             signUp: function(email, password, username) {
                 console.log("UserService signUp");
                 var userResource = UserResource.signUp({}, {email: email, password: password, username: username}, function() {
                     console.log("UserService signUp success");
-                }, function() {
+                    $rootScope.$emit("UserService.signUpSuccess", {alertMessage: "Welcome to Topoi!", authorization: userResource._kmd.authtoken});
+                }, function(data) {
                     console.log("UserService signUp error");
+                    $rootScope.$emit("UserService.signUpError", {alertMessage: (data.status === 409) ? "Please choose a different username" : data.data.description});
                 });
             }
         }
