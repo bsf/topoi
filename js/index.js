@@ -17,30 +17,34 @@ angular.module("Application.Controllers", [])
     .controller("HomeController", ["$scope", function($scope) {
     }])
 
-    .controller("LogInController", ["$scope", function($scope) {
+    .controller("LogInController", ["$scope", "UserService", function($scope, UserService) {
         $scope.logIn = function() {
             console.log("LogInController login");
+            UserService.logIn();
         }
     }])
 
-    .controller("LogOutController", ["$scope", function($scope) {
+    .controller("LogOutController", ["$scope", "UserService", function($scope, UserService) {
         $scope.logOut = function() {
             console.log("LogOutController logOut");
+            UserService.logOut();
         }
     }])
 
     .controller("NavController", ["$scope", function($scope) {
     }])
 
-    .controller("ResetPasswordController", ["$scope", function($scope) {
+    .controller("ResetPasswordController", ["$scope", "ResetPasswordService", function($scope, ResetPasswordService) {
         $scope.resetPassword = function() {
             console.log("ResetPasswordController resetPassword");
+            ResetPasswordService.resetPassword();
         }
     }])
 
-    .controller("SignUpController", ["$scope", function($scope) {
+    .controller("SignUpController", ["$scope", "UserService", function($scope, UserService) {
         $scope.signUp = function() {
             console.log("SignUpController signUp");
+            UserService.signUp();
         }
     }]);
 
@@ -50,4 +54,26 @@ angular.module("Application.Filters", []);
 
 angular.module("Application.Resources", []);
 
-angular.module("Application.Services", []);
+angular.module("Application.Services", [])
+
+    .factory("ResetPasswordService", ["$rootScope", function($rootScope) {
+        return {
+            resetPassword: function() {
+                console.log("ResetPasswordService resetPassword");
+            }
+        }
+    }])
+
+    .factory("UserService", ["$rootScope", function($rootScope) {
+        return {
+            logIn: function() {
+                console.log("UserService logIn");
+            },
+            logOut: function() {
+                console.log("UserService logOut");
+            },
+            signUp: function() {
+                console.log("UserService signUp");
+            }
+        }
+    }]);
