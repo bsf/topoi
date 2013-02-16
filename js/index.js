@@ -1,5 +1,9 @@
 angular.module("Application", ["Application.Constants", "Application.Controllers", "Application.Directives", "Application.Filters", "Application.Resources", "Application.Services", "ngResource", "ui.bootstrap"])
 
+    .config(["$httpProvider", function($httpProvider) {
+        delete $httpProvider.defaults.headers.common["X-Requested-With"];
+    }])
+
     .config(["$locationProvider", "$routeProvider", function($locationProvider, $routeProvider) {
         $routeProvider
             .when("/home", {controller: "HomeController", templateUrl: "html/home.html"})
