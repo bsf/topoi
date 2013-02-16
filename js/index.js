@@ -14,6 +14,15 @@ angular.module("Application", ["Application.Constants", "Application.Controllers
             .otherwise({redirectTo: "/home"})
     }])
 
+    .run(["$location", "$rootScope", "AuthorizationService", function($location, $rootScope, AuthorizationService) {
+        $rootScope.$on("$routeChangeStart", function(current, next) {
+            var hasAuthorization = AuthorizationService.hasAuthorization()
+            if ((hasAuthorization && (next.templateUrl === "html/login.html" || next.templateUrl === "html/resetpassword.html" || next.templateUrl === "html/signup.html")) || (!hasAuthorization && next.templateUrl === "html/logout.html")) {
+                $location.path("/home")
+            }
+        })
+    }])
+
 angular.module("Application.Constants", [])
 
     .constant("KinveyAppKey", "kid_ePnnV73luf")
