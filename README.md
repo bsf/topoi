@@ -1,4 +1,4 @@
-topoi2
-======
+topoi
+=====
 
 A sandbox.
